@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="droviaBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f111a"/>
+      <stop offset="100%" stop-color="#181a29"/>
+    </linearGradient>
+    <linearGradient id="droviaIcon" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#22d3ee"/>
+    </linearGradient>
+    <linearGradient id="droviaBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="rgba(99,102,241,0.6)"/>
+      <stop offset="100%" stop-color="rgba(34,211,238,0.6)"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Minimal Rounded App Badge Background -->
+  <rect x="24" y="24" width="464" height="464" rx="120" fill="url(#droviaBg)" stroke="url(#droviaBorder)" stroke-width="16"/>
+
+  <!-- Clean Minimal 3-Layered Transfer Chevron Stack -->
+  <g fill="none" stroke="url(#droviaIcon)" stroke-width="34" stroke-linecap="round" stroke-linejoin="round">
+    <polygon points="256 120, 380 184, 256 248, 132 184" fill="url(#droviaIcon)" fill-opacity="0.2" />
+    <path d="M132 256 L256 320 L380 256" />
+    <path d="M132 328 L256 392 L380 328" />
+  </g>
+</svg>
