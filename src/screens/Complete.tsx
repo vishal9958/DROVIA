@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { IconDownload, IconCheck, IconZip } from "../components/Icons"
-import { downloadFile, downloadFilesAsZip, getHistoryRecords, type FileInfo } from "../services/transferStore"
+import { downloadFile, downloadFilesAsZip, getHistoryRecords, saveHistoryRecord, type FileInfo } from "../services/transferStore"
 import { notificationService } from "../services/notificationService"
 
 type Screen = "landing" | "send" | "transfer-ready" | "receive" | "connecting" | "incoming" | "progress" | "complete" | "history" | "settings"

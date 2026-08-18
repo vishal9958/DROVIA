@@ -371,23 +371,17 @@ export async function downloadFile(file: FileInfo) {
 
   const activeSessionKey = Array.from(activeTransfers.keys())[0] || ""
 
-  // For Capacitor Native, we can now safely use Filesystem.downloadFile since the backend is HTTPS
+  // For Capacitor Native, we use the Android Download Manager (window.location.href) 
+  // so the user gets a system notification and the file goes to the public "Downloads" folder.
   if (isCapacitorNative && activeSessionKey) {
     const fileIdentifier = file.id || encodeURIComponent(file.name)
     const downloadUrl = `${getApiHost()}/transfers/download-file/${activeSessionKey}/${fileIdentifier}`
     
-    try {
-      await Filesystem.downloadFile({
-        url: downloadUrl,
-        path: fileName,
-        directory: Directory.Documents,
-        recursive: true
-      })
-      // It is safely downloaded to Documents with the correct extension
-      return
-    } catch (e) {
-      console.error("Native download failed, falling back to blob", e)
-    }
+    setTimeout(() => {
+      window.location.href = downloadUrl
+    }, 100)
+    
+    // We don't return here so it also saves to Documents as a fallback
   }
 
   let blob: Blob | null = file.blob || blobMap.get(file.id) || null

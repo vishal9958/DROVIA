@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import type { MobileScreen } from "./MobileApp"
 import type { ToastData } from "../components/Toast"
-import { downloadFile, downloadFilesAsZip, getHistoryRecords, type FileInfo } from "../services/transferStore"
+import { downloadFile, downloadFilesAsZip, getHistoryRecords, saveHistoryRecord, type FileInfo } from "../services/transferStore"
 import { notificationService } from "../services/notificationService"
 
 interface Props {
