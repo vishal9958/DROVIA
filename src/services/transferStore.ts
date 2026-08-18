@@ -43,7 +43,7 @@ const getApiHost = () => {
     // Detect Capacitor Native App (Android/iOS)
     const isCapacitorNative = !!(window as any).Capacitor?.isNativePlatform?.() || window.location.protocol === "capacitor:"
     if (isCapacitorNative) {
-      return "http://192.168.0.101:5000/api"
+      return "https://drovia-backend-8gvb.onrender.com/api"
     }
     
     if (window.location && window.location.hostname) {
