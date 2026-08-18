@@ -43,10 +43,26 @@ export default function MobileSuccess({ onNavigate, addToast, files = [], role =
   const [downloading, setDownloading] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!isSender && fileList.length > 0) {
-      notificationService.notifyTransferComplete(fileList[0].name)
+    if (fileList.length > 0) {
+      if (!isSender) {
+        notificationService.notifyTransferComplete(fileList[0].name)
+      }
+      
+      // Save transfer history
+      fileList.forEach(f => {
+        saveHistoryRecord({
+          id: f.id || Math.random().toString(36).slice(2),
+          name: f.name,
+          size: f.size,
+          date: new Date().toISOString(),
+          device: connectedDevice || "Connected Device",
+          status: "completed",
+          direction: isSender ? "sent" : "received",
+          file: f
+        })
+      })
     }
-  }, [isSender, fileList])
+  }, [isSender, fileList, connectedDevice])
 
   const handleDownloadSingle = async (f: FileInfo) => {
     setDownloading(f.id)

@@ -51,8 +51,26 @@ export default function Complete({ onNavigate, files = [], role = "receiver" }: 
   const [downloadedSet, setDownloadedSet] = useState<Set<string>>(new Set())
 
   useEffect(() => {
-    notificationService.notifyTransferComplete(fileList[0]?.name || "Files")
-  }, [fileList])
+    if (fileList.length > 0) {
+      if (!isSender) {
+        notificationService.notifyTransferComplete(fileList[0]?.name || "Files")
+      }
+      
+      // Save transfer history
+      fileList.forEach(f => {
+        saveHistoryRecord({
+          id: f.id || Math.random().toString(36).slice(2),
+          name: f.name,
+          size: f.size,
+          date: new Date().toISOString(),
+          device: "Connected Device", // Simplified for web
+          status: "completed",
+          direction: isSender ? "sent" : "received",
+          file: f
+        })
+      })
+    }
+  }, [isSender, fileList])
 
   const handleDownloadSingle = (file: FileInfo) => {
     downloadFile(file)
