@@ -371,17 +371,17 @@ export async function downloadFile(file: FileInfo) {
 
   const activeSessionKey = Array.from(activeTransfers.keys())[0] || ""
 
-  // For Capacitor Native, we use the Android Download Manager (window.location.href) 
-  // so the user gets a system notification and the file goes to the public "Downloads" folder.
   if (isCapacitorNative && activeSessionKey) {
     const fileIdentifier = file.id || encodeURIComponent(file.name)
-    const downloadUrl = `${getApiHost()}/transfers/download-file/${activeSessionKey}/${fileIdentifier}`
+    const encodedFileName = encodeURIComponent(fileName)
+    // Appending filename to the URL path ensures Android Download Manager accurately guesses the file extension!
+    const downloadUrl = `${getApiHost()}/transfers/download-file/${activeSessionKey}/${fileIdentifier}/${encodedFileName}`
     
     setTimeout(() => {
       window.location.href = downloadUrl
     }, 100)
     
-    // We don't return here so it also saves to Documents as a fallback
+    return // Explicitly return so we don't trigger duplicate downloads below
   }
 
   let blob: Blob | null = file.blob || blobMap.get(file.id) || null
