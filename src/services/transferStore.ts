@@ -375,21 +375,22 @@ export async function downloadFile(file: FileInfo) {
     const fileIdentifier = file.id || encodeURIComponent(file.name)
     const encodedFileName = encodeURIComponent(fileName)
     // Appending filename to the URL path ensures Android Download Manager accurately guesses the file extension!
-    // Use Capacitor Filesystem to download the file natively in the background.
-    // Directory.Documents on Android maps to the public "Documents" folder, which is visible in the File Manager.
-    // This avoids opening any browser UI and keeps the experience 100% native.
-    try {
-      const result = await Filesystem.downloadFile({
-        url: downloadUrl,
-        path: `Drovia/${fileName}`,
-        directory: Directory.Documents,
-        recursive: true
-      })
-      console.log("File downloaded to:", result.path)
-    } catch (e) {
-      console.error("Native download failed, falling back to window.open", e)
-      window.location.href = downloadUrl
-    }
+    // Use Capgo's Downloader plugin which natively hooks into Android's DownloadManager.
+    // This GUARANTEES the file is saved in the public "Downloads" directory on Android,
+    // overcoming Capacitor Filesystem's limitation of saving to private app storage on Android 11+.
+    import("@capgo/capacitor-downloader").then(async ({ CapacitorDownloader }) => {
+      try {
+        await CapacitorDownloader.download({
+          id: fileIdentifier,
+          url: downloadUrl,
+          destination: `Drovia_${encodedFileName}`
+        })
+        console.log("Download initiated via Android DownloadManager")
+      } catch (e) {
+        console.error("Native downloader failed, falling back to window.location.href", e)
+        window.location.href = downloadUrl
+      }
+    })
     
     return // Explicitly return so we don't trigger duplicate downloads below
   }
