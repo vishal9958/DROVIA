@@ -375,16 +375,12 @@ export async function downloadFile(file: FileInfo) {
     const fileIdentifier = file.id || encodeURIComponent(file.name)
     const encodedFileName = encodeURIComponent(fileName)
     // Appending filename to the URL path ensures Android Download Manager accurately guesses the file extension!
-    // Use a hidden iframe to trigger the download silently instead of opening the external browser
-    const iframe = document.createElement("iframe")
-    iframe.style.display = "none"
-    iframe.src = downloadUrl
-    document.body.appendChild(iframe)
-    
-    // Clean up the iframe after 10 seconds (gives enough time for the download to start)
+    // We use window.open with '_system' to hand off the download directly to the Android System
+    // Download Manager. This ensures the file is reliably saved to the public "Downloads" folder,
+    // which silent iframes cannot do in modern Android WebViews due to security restrictions.
     setTimeout(() => {
-      try { document.body.removeChild(iframe) } catch (e) {}
-    }, 10000)
+      window.open(downloadUrl, "_system")
+    }, 100)
     
     return // Explicitly return so we don't trigger duplicate downloads below
   }

@@ -11,9 +11,11 @@
     "format": "oxfmt"
   },
   "dependencies": {
+    "@capacitor-community/file-opener": "^8.0.1",
     "@capacitor/app": "^8.1.1",
     "@capacitor/core": "^8.5.0",
     "@capacitor/filesystem": "^8.1.2",
+    "@capgo/capacitor-downloader": "^8.1.31",
     "jsqr": "^1.4.0",
     "jszip": "^3.10.1",
     "qrcode.react": "^4.2.0",
