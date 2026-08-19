@@ -375,13 +375,21 @@ export async function downloadFile(file: FileInfo) {
     const fileIdentifier = file.id || encodeURIComponent(file.name)
     const encodedFileName = encodeURIComponent(fileName)
     // Appending filename to the URL path ensures Android Download Manager accurately guesses the file extension!
-    // Use the official Capacitor Browser plugin to hand off the download to the Android System Download Manager.
-    // Capacitor's internal WebView completely blocks window.open(), causing downloads to silently fail.
-    import("@capacitor/browser").then(({ Browser }) => {
-      Browser.open({ url: downloadUrl, presentationStyle: "popover" }).catch(() => {
-        window.location.href = downloadUrl // Fallback
+    // Use Capacitor Filesystem to download the file natively in the background.
+    // Directory.Documents on Android maps to the public "Documents" folder, which is visible in the File Manager.
+    // This avoids opening any browser UI and keeps the experience 100% native.
+    try {
+      const result = await Filesystem.downloadFile({
+        url: downloadUrl,
+        path: `Drovia/${fileName}`,
+        directory: Directory.Documents,
+        recursive: true
       })
-    })
+      console.log("File downloaded to:", result.path)
+    } catch (e) {
+      console.error("Native download failed, falling back to window.open", e)
+      window.location.href = downloadUrl
+    }
     
     return // Explicitly return so we don't trigger duplicate downloads below
   }
