@@ -375,12 +375,13 @@ export async function downloadFile(file: FileInfo) {
     const fileIdentifier = file.id || encodeURIComponent(file.name)
     const encodedFileName = encodeURIComponent(fileName)
     // Appending filename to the URL path ensures Android Download Manager accurately guesses the file extension!
-    // We use window.open with '_system' to hand off the download directly to the Android System
-    // Download Manager. This ensures the file is reliably saved to the public "Downloads" folder,
-    // which silent iframes cannot do in modern Android WebViews due to security restrictions.
-    setTimeout(() => {
-      window.open(downloadUrl, "_system")
-    }, 100)
+    // Use the official Capacitor Browser plugin to hand off the download to the Android System Download Manager.
+    // Capacitor's internal WebView completely blocks window.open(), causing downloads to silently fail.
+    import("@capacitor/browser").then(({ Browser }) => {
+      Browser.open({ url: downloadUrl, presentationStyle: "popover" }).catch(() => {
+        window.location.href = downloadUrl // Fallback
+      })
+    })
     
     return // Explicitly return so we don't trigger duplicate downloads below
   }
