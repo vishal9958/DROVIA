@@ -374,6 +374,8 @@ export async function downloadFile(file: FileInfo) {
   if (isCapacitorNative && activeSessionKey) {
     const fileIdentifier = file.id || encodeURIComponent(file.name)
     const encodedFileName = encodeURIComponent(fileName)
+    const downloadUrl = `${getApiHost()}/transfers/download-file/${activeSessionKey}/${fileIdentifier}/${encodedFileName}`
+    
     // Appending filename to the URL path ensures Android Download Manager accurately guesses the file extension!
     // Use Capgo's Downloader plugin which natively hooks into Android's DownloadManager.
     // This GUARANTEES the file is saved in the public "Downloads" directory on Android,
@@ -383,7 +385,7 @@ export async function downloadFile(file: FileInfo) {
         await CapacitorDownloader.download({
           id: fileIdentifier,
           url: downloadUrl,
-          destination: `Drovia_${encodedFileName}`
+          destination: fileName
         })
         console.log("Download initiated via Android DownloadManager")
       } catch (e) {
